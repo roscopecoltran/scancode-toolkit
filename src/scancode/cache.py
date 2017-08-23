@@ -89,7 +89,7 @@ def get_scans_cache_class(cache_dir=scans_cache_dir):
     """
     # create a unique temp directory in cache_dir
     fileutils.create_dir(cache_dir)
-    # ensure that the cache dir is alwasy unicode
+    # ensure that the cache dir is always unicode
     cache_dir = fileutils.get_temp_dir(unicode(cache_dir), prefix=unicode(timeutils.time2tstamp()) + u'-')
     sc = ScanFileCache(cache_dir)
     sc.setup()

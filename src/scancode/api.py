@@ -28,11 +28,31 @@ from __future__ import unicode_literals
 
 from collections import OrderedDict
 
+from commoncode import fileutils
+from scancode.utils import get_relative_path
+
 
 """
 Main scanning functions.
 Note: this API is unstable and still evolving.
 """
+
+class Resource(object):
+    """
+    Store scanned details for a single resource (file or a directory)
+    such as infos and path
+    """
+
+    def __init__(self, abs_path, base_path, base_is_dir, len_base_path):
+        self.base_path = base_path
+        self.abs_path = abs_path
+        self.base_is_dir = base_is_dir
+        posix_path = fileutils.as_posixpath(abs_path)
+        # fix paths: keep the path as relative to the original base_path
+        self.rel_path = get_relative_path(posix_path, len_base_path, base_is_dir)
+        self.infos = OrderedDict()
+        self.infos['path'] = self.rel_path
+
 
 def extract_archives(location, recurse=True):
     """
@@ -164,7 +184,6 @@ def get_file_infos(location):
     Return a mapping of file information collected from the file or
     directory at `location`.
     """
-    from commoncode import fileutils
     from commoncode import filetype
     from commoncode.hash import multi_checksums
     from typecode import contenttype
